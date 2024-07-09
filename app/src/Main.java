@@ -8,6 +8,17 @@ public class Main {
         Player player2 = new Player("Bob",100,10,10);
         playingArena.addPlayer(player2);
 
-        Dice numberOfDice = new Dice(1);
+        Player player3 = new Player("Messi",1,10,10);
+        playingArena.addPlayer(player3);
+
+        Dice dice = new Dice(1);
+        playingArena.setDice(dice);
+
+        playingArena.startGame();
+
+        Player player4 = new Player("Ram",100,0,10);
+        playingArena.addPlayer(player4);
+
+        playingArena.startGame();
     }
 }
