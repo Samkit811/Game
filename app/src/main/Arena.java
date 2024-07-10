@@ -1,3 +1,5 @@
+package main;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,7 +9,7 @@ public class Arena {
     private Random random;
     private Dice dice;
 
-    Arena(){
+    public Arena(){
         players = new ArrayList<>();
         random = new Random();
     }
@@ -18,6 +20,10 @@ public class Arena {
 
     public void setDice(Dice dice){
         this.dice = dice;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 
     public void startGame(){
@@ -38,17 +44,17 @@ public class Arena {
         return player;
     }
 
-    private void decidePlayerRole(Player firstPlayer,Player secondPlayer){
+    private void decidePlayerRole(Player firstPlayer, Player secondPlayer){
         Player attackingPlayer = decideAttacker(firstPlayer,secondPlayer);
         Player defendingPlayer = decideDefender(firstPlayer,secondPlayer);
         playGame(attackingPlayer,defendingPlayer);
     }
 
-    private Player decideAttacker(Player firstPlayer,Player secondPlayer){
+    private Player decideAttacker(Player firstPlayer, Player secondPlayer){
         return firstPlayer.getHealth() > secondPlayer.getHealth() ? firstPlayer : secondPlayer;
     }
 
-    private Player decideDefender(Player firstPlayer,Player secondPlayer){
+    private Player decideDefender(Player firstPlayer, Player secondPlayer){
         return firstPlayer.getHealth() <= secondPlayer.getHealth() ? firstPlayer : secondPlayer;
     }
 
