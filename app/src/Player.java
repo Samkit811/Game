@@ -31,4 +31,20 @@ public class Player {
     public void setHealth(int health) {
         this.health = health;
     }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public boolean isAlive(int health){
+        return health>0;
+    }
 }

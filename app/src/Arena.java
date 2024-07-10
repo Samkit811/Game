@@ -22,40 +22,63 @@ public class Arena {
 
     public void startGame(){
         while(players.size()>1){
-            int index1 = random.nextInt(players.size());
-            Player firstPlayer = players.get(index1);
-            players.remove(index1);
-
-            int index2 = random.nextInt(players.size());
-            Player secondPlayer = players.get(index2);
-            players.remove(index2);
-
-            if(firstPlayer.getHealth() <= secondPlayer.getHealth()){
-                playGame(firstPlayer,secondPlayer);
-            }
-            else{
-                playGame(secondPlayer,firstPlayer);
-            }
+            Player firstPlayer = selectRandomPlayer(players);
+            Player secondPlayer = selectRandomPlayer(players);
+            System.out.println(firstPlayer.getName()+" and "+secondPlayer.getName()+" are playing the next round");
+            decidePlayerRole(firstPlayer,secondPlayer);
         }
         Player winnerPlayer = players.get(0);
-        System.out.println("Winner is:"+ winnerPlayer.getName());
+        System.out.println("Winner of the game is:"+ winnerPlayer.getName());
+    }
+
+    private Player selectRandomPlayer(List<Player> players) {
+        int index = random.nextInt(players.size());
+        Player player = players.get(index);
+        players.remove(index);
+        return player;
+    }
+
+    private void decidePlayerRole(Player firstPlayer,Player secondPlayer){
+        Player attackingPlayer = decideAttacker(firstPlayer,secondPlayer);
+        Player defendingPlayer = decideDefender(firstPlayer,secondPlayer);
+        playGame(attackingPlayer,defendingPlayer);
+    }
+
+    private Player decideAttacker(Player firstPlayer,Player secondPlayer){
+        return firstPlayer.getHealth() > secondPlayer.getHealth() ? firstPlayer : secondPlayer;
+    }
+
+    private Player decideDefender(Player firstPlayer,Player secondPlayer){
+        return firstPlayer.getHealth() <= secondPlayer.getHealth() ? firstPlayer : secondPlayer;
     }
 
     private void playGame(Player attackingPlayer, Player defendingPlayer){
-        int attackMultiplier = dice.rollDice();
-        int attackValue = attackingPlayer.getAttack() * attackMultiplier;
 
-        int defenceMultiplier = dice.rollDice();
-        int defenceValue = defendingPlayer.getStrength() * defenceMultiplier;
+        int attackValue = powerMultiplier(attackingPlayer.getAttack()) ;
+        int defenceValue = powerMultiplier(defendingPlayer.getStrength());
 
-        if(attackValue - defenceValue >= defendingPlayer.getHealth()){
-            System.out.println(defendingPlayer.getName()+" is lost");
+        if(!isAttackValid(attackValue,defenceValue)){
+          playGame(defendingPlayer,attackingPlayer);
+          return;
+        }
+
+        int damage = attackValue - defenceValue;
+        if(!defendingPlayer.isAlive(defendingPlayer.getHealth() - damage)){
+            System.out.println(defendingPlayer.getName()+" has been eliminated");
             addPlayer(attackingPlayer);
+            return;
         }
-        else{
-            int remainingHealth = defendingPlayer.getHealth() - (attackValue - defenceValue);
-            defendingPlayer.setHealth(remainingHealth);
-            playGame(defendingPlayer,attackingPlayer);
-        }
+
+        defendingPlayer.setHealth(defendingPlayer.getHealth()-damage);
+        playGame(defendingPlayer,attackingPlayer);
+    }
+
+    private int powerMultiplier(int power){
+        int multiplierValue = dice.rollDice();
+        return power*multiplierValue;
+    }
+
+    private boolean isAttackValid(int attackValue,int defenceValue){
+        return attackValue > defenceValue;
     }
 }

@@ -15,10 +15,5 @@ public class Main {
         playingArena.setDice(dice);
 
         playingArena.startGame();
-
-        Player player4 = new Player("Ram",100,0,10);
-        playingArena.addPlayer(player4);
-
-        playingArena.startGame();
     }
 }
